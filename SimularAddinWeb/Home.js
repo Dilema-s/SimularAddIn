@@ -6,7 +6,8 @@
 
     // The initialize function must be run each time a new page is loaded.
     Office.initialize = function(reason) {
-        $(document).ready(function() {
+        $(document).ready(function () {
+
             // Initialize the FabricUI notification mechanism and hide it
             var element = document.querySelector('.ms-MessageBanner');
             messageBanner = new fabric.MessageBanner(element);
