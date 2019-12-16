@@ -15,8 +15,6 @@
 
             // If not using Excel 2016, use fallback logic.
             if (!Office.context.requirements.isSetSupported('ExcelApi', '1.1')) {
-                $("#template-description")
-                    .text("This sample will display the value of the cells that you have selected in the spreadsheet.");
                 $('#button-text').text("Display!");
                 $('#button-desc').text("Display the selection");
 
@@ -24,8 +22,6 @@
                 return;
             }
 
-            $("#template-description")
-                .text("This sample highlights the highest value from the cells you have selected in the spreadsheet.");
             $('#button-text').text("QuantLib");
             $('#button-desc').text("Highlights the largest number.");
 
@@ -33,27 +29,114 @@
 
             // Add a click event handler for the highlight button.
             $('#highlight-button').click(quantlibTest);
+            $('#generar-datos').click(loadSampleData);
+            $('#ordenar-datos').click(sorterTable);
+            $('#calculate-mean').click(calculateMean);
+            $('#calculate-nd').click(NormalDistribution);
         });
     };
 
     function loadSampleData() {
-        var values = [
-            [Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000)],
-            [Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000)],
-            [Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000), Math.floor(Math.random() * 1000)]
-        ];
-
         // Run a batch operation against the Excel object model
         Excel.run(function(ctx) {
-                // Create a proxy object for the active sheet
-                var sheet = ctx.workbook.worksheets.getActiveWorksheet();
-                // Queue a command to write the sample data to the worksheet
-                sheet.getRange("B3:D5").values = values;
 
-                // Run the queued-up commands, and return a promise to indicate task completion
+                var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+                var expensesTable = sheet.tables.add("A1:B1", true /*hasHeaders*/);
+                expensesTable.name = "ExpensesTable";
+
+                expensesTable.getHeaderRowRange().values = [["Employee Name", "Employee Ratings"]];
+
+                for (var i = 0; i <= 99; i++) {
+                    expensesTable.rows.add(null /*add rows to the end of the table*/, [
+                        ["Employee" + " " + i, Math.floor(Math.random() * (50 - 10 + 1)) + 10]
+                    ]);
+                }
+
+                if (Office.context.requirements.isSetSupported("ExcelApi", "1.2")) {
+                    sheet.getUsedRange().format.autofitColumns();
+                    sheet.getUsedRange().format.autofitRows();
+                }
+
+                sheet.activate();
                 return ctx.sync();
             })
             .catch(errorHandler);
+    }
+
+    function sorterTable() {
+        Excel.run(function (ctx) {
+            var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+            var expensesTable = sheet.tables.getItem("ExpensesTable");
+
+            // Queue a command to sort data by the fourth column of the table (descending)
+            var sortRange = expensesTable.getDataBodyRange();
+            sortRange.sort.apply([
+                {
+                    key: 1,
+                    ascending: true
+                }
+            ]);
+
+            // Sync to run the queued command in Excel
+            return ctx.sync();
+        }).catch(errorHandler);
+    }
+
+    function calculateMean() {
+        Excel.run(function (ctx) {
+            var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+
+            var data = [
+                ["Mean","=AVERAGE(B2:B101)"],
+                ["Standard Deviation","=STDEV(B2:B101)"]
+            ];
+
+            var range = sheet.getRange("E10:F11");
+            range.formulas = data;
+            range.format.autofitColumns();
+
+            // Sync to run the queued command in Excel
+            return ctx.sync();
+        }).catch(errorHandler);
+      
+    }
+
+    function NormalDistribution() {
+        Excel.run(function (ctx) {
+            var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+
+            var data = [];
+            var mean = sheet.getRange("F10").values;
+            var sd = sheet.getRange("F11").values;
+
+            for (var i = 2; i <= 101; i++) {
+                data.push(["=NORM.DIST(B" + i + "," +mean +","+ sd +",FALSE)"]);
+            }
+
+
+            var range = sheet.getRange("C2:C101");
+            range.formulas = data;
+            range.format.autofitColumns();
+
+            // Sync to run the queued command in Excel
+            return ctx.sync();
+        }).catch(errorHandler);
+    }
+
+    function createChart() {
+        Excel.run(function (context) {
+            var sheet = context.workbook.worksheets.getItem("Sample");
+            var dataRange = sheet.getRange("A1:B13");
+            var chart = sheet.charts.add("Line", dataRange, "auto");
+
+            chart.title.text = "Sales Data";
+            chart.legend.position = "right";
+            chart.legend.format.fill.setSolidColor("white");
+            chart.dataLabels.format.font.size = 15;
+            chart.dataLabels.format.font.color = "black";
+
+            return context.sync();
+        }).catch(errorHandler);
     }
 
     function hightlightHighestValue() {
@@ -154,3 +237,4 @@
         messageBanner.toggleExpansion();
     }
 })();
+

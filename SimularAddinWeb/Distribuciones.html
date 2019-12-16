@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <title>Excel Add-In with Commands Sample</title>
-    
+
     <script src="Scripts/jquery-3.4.1.js"></script>
     <script src="Scripts/FabricUI/MessageBanner.js" type="text/javascript"></script>
     <link href="Content/fabric.css" rel="stylesheet" />
@@ -33,7 +33,7 @@
 </head>
 <body class="text-center">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-info text-white">
+<nav class="navbar navbar-expand-lg navbar-light bg-info text-center">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,32 +42,63 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/Home.html">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/Distribuciones.html">Distribuciones</a>
+                <a class="nav-link" href="#">Distribuciones</a>
             </li>
         </ul>
     </div>
 </nav>
 
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <main role="main" class="inner cover">
-            <h1 class="cover-heading">Simular+</h1>
-            <p class="lead">Evaluaciones de riesgo</p>
-            <p class="lead">
-                <a href="/Distribuciones.html" class="btn btn-lg btn-outline-info">Comenzar</a>
-            </p>
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <main role="main" class="inner cover">
+        <div class="container">
             
-        </main>
-
-        <footer class="mastfoot mt-auto">
-            <div class="inner">
-                <p>2019 by SimularTeam</p>
+            <div class="card">
+                <img src="/Images/NDimg.png" class="card-img-top" alt="Normal Diitribution">
+                <div class="card-body">
+                    <h5 class="card-title">Distribución Normal</h5>
+                    <p class="card-text">
+                        Normal distribution, also known as the Gaussian distribution.
+                    </p>
+                    <button id="generar-datos" class="btn btn-outline-primary">
+                        Generar Datos
+                    </button>
+                    <br /><br />
+                    <button id="ordenar-datos" class="btn btn-outline-primary">
+                        Ordenar Datos
+                    </button>
+                    <br /><br />
+                    <button id="calculate-mean" class="btn btn-outline-primary">
+                        Calcular Media
+                    </button>
+                    <br /><br />
+                    <button id="calculate-nd" class="btn btn-success">
+                        Distribución Normal
+                    </button>
+                    <br /><br />
+                    <a href="#" class="btn btn-primary">Gráfico</a>
+                    <br /><br />
+                    <button class="ms-Button ms-Button--primary" id="highlight-button">
+                        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                        <span class="ms-Button-label" id="button-text"></span>
+                        <span class="ms-Button-description" id="button-desc"></span>
+                    </button>
+                </div>
             </div>
-        </footer>
-    </div>
-    
+        </div>
+    </main>
+
+    <footer class="mastfoot mt-auto">
+        <div class="inner">
+            <p>2019 by SimularTeam</p>
+        </div>
+    </footer>
+</div>  
+
+
+
     <!-- FabricUI component used for displaying notifications -->
     <div class="ms-MessageBanner" id="notification-popup">
         <div class="ms-MessageBanner-content">

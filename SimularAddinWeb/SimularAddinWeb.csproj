@@ -80,6 +80,8 @@
     <Content Include="Content\fabric.rtl.css" />
     <Content Include="Content\fabric.rtl.min.css" />
     <Content Include="Content\OfficeThemes.css" />
+    <Content Include="Distribuciones.html" />
+    <Content Include="Distribuciones.js" />
     <Content Include="Functions\FunctionFile.html" />
     <Content Include="Functions\FunctionFile.js" />
     <Content Include="Home.css" />
