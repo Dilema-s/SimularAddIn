@@ -103,22 +103,23 @@
 
     function NormalDistribution() {
         Excel.run(function (ctx) {
-            var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+            //var sheet = ctx.workbook.worksheets.getActiveWorksheet();
 
-            var data = [];
-            var mean = sheet.getRange("F10").values;
-            var sd = sheet.getRange("F11").values;
+            //var data = [];
+            //var mean = sheet.getRange("F10").values;
+            //var sd = sheet.getRange("F11").values;
 
-            for (var i = 2; i <= 101; i++) {
-                data.push(["=NORM.DIST(B" + i + "," +mean +","+ sd +",FALSE)"]);
-            }
+            //for (var i = 2; i <= 101; i++) {
+            //    data.push(["=NORM.DIST(B" + i + "," +mean +","+ sd +",FALSE)"]);
+            //}
 
 
-            var range = sheet.getRange("C2:C101");
-            range.formulas = data;
-            range.format.autofitColumns();
+            //var range = sheet.getRange("C2:C101");
+            //range.formulas = data;
+            //range.format.autofitColumns();
 
-            // Sync to run the queued command in Excel
+            //// Sync to run the queued command in Excel
+            showNotification('Ahora si');
             return ctx.sync();
         }).catch(errorHandler);
     }
