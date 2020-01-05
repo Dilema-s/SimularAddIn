@@ -33,6 +33,7 @@
             $('#ordenar-datos').click(sorterTable);
             $('#calculate-mean').click(calculateMean);
             $('#calculate-nd').click(NormalDistribution);
+            $('.btn-primary').click(createChart);
         });
     };
 
@@ -91,7 +92,7 @@
                 ["Standard Deviation","=STDEV(B2:B101)"]
             ];
 
-            var range = sheet.getRange("E10:F11");
+            var range = sheet.getRange("F2:G3");
             range.formulas = data;
             range.format.autofitColumns();
 
@@ -103,40 +104,35 @@
 
     function NormalDistribution() {
         Excel.run(function (ctx) {
-            //var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+            var sheet = ctx.workbook.worksheets.getActiveWorksheet();
 
-            //var data = [];
-            //var mean = sheet.getRange("F10").values;
-            //var sd = sheet.getRange("F11").values;
+            var data = [];
 
-            //for (var i = 2; i <= 101; i++) {
-            //    data.push(["=NORM.DIST(B" + i + "," +mean +","+ sd +",FALSE)"]);
-            //}
+            for (var i = 2; i <= 101; i++) {
+                data.push(["=NORM.DIST(B" + i + ",G2,G3,FALSE)"]);
+            }
 
+            var range = sheet.getRange("D2:D101");
+            range.formulas = data;
+            range.format.autofitColumns();
 
-            //var range = sheet.getRange("C2:C101");
-            //range.formulas = data;
-            //range.format.autofitColumns();
-
-            //// Sync to run the queued command in Excel
-            showNotification('Ahora si');
+            // Sync to run the queued command in Excel
             return ctx.sync();
         }).catch(errorHandler);
     }
 
     function createChart() {
-        Excel.run(function (context) {
-            var sheet = context.workbook.worksheets.getItem("Sample");
-            var dataRange = sheet.getRange("A1:B13");
-            var chart = sheet.charts.add("Line", dataRange, "auto");
+        Excel.run(function (ctx) {
+            var sheet = ctx.workbook.worksheets.getActiveWorksheet();
+            var dataRange = sheet.getRange("B2:D101");
+            var chart = sheet.charts.add("xyscatter", dataRange);
 
-            chart.title.text = "Sales Data";
-            chart.legend.position = "right";
+            chart.title.text = "Normal Distribution";
+            chart.legend.position = "bottom";
             chart.legend.format.fill.setSolidColor("white");
-            chart.dataLabels.format.font.size = 15;
-            chart.dataLabels.format.font.color = "black";
 
-            return context.sync();
+
+            return ctx.sync();
         }).catch(errorHandler);
     }
 
@@ -197,9 +193,6 @@
                 }
                 return ctx.sync()
                     .then(function () {
-
-                        
-
                         var number1 = 0.2;
                         CallHandlerSync("Handler.ashx?RequestType=Derivative", { 'number1': number1});
                     })
